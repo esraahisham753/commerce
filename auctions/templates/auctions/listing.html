@@ -1,0 +1,71 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %}
+    {{ listing.title }}
+{% endblock %}
+
+{% block body %}
+    <div class="listing">
+        <h2>Listing: {{ listing.title }}</h2>
+        <div>
+        {% if winner %}
+            <p class="badge badge-success">You won</p>
+        {% endif %}
+        {% if is_in_watchlist %}
+            <a class="badge badge-warning" href="{% url 'remove_watchlist' listing.id %}">Remove from Watchlist</a>
+        {% else %}
+            <a class="badge badge-success" href="{% url 'add_watchlist' listing.id %}">Add to Watchlist</a>
+        {% endif %}
+        {% if owner and active %}
+            <a class="badge badge-danger" href="{% url 'close_listing' listing.id %}">Close Listing</a>
+        {% endif %}
+        {% if not active %}
+            <p class="badge badge-danger">Closed</p>
+        {% endif %}
+        </div>
+        {% if listing.image %}
+        <img src="{{ listing.image }}" alt="{{ listing.title }}">
+        {% endif %}
+        <p>{{ listing.description }}</p>
+        {% if listing.price %}
+            <p class="price"><strong>Price:</strong> ${{ listing.price }}</p>
+        {% else %}
+            <p class="price">${{ listing.start_bid }}</p>
+        {% endif %}
+        <form action="{% url 'listing' listing.id %}" method="post">
+            {% csrf_token %}
+            <label>{{ bids }} bid(s) so far</label> <br>
+            <input type="number" class="form-control" name="bid" step="0.01" min="{{ listing.start_bid}}" placeholder="Bid" required> <br>
+            <input type="submit" class="btn btn-primary" value="Place Bid">
+        </form>
+        {% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
+        <h3>Details</h3>
+        <ul>
+            <li>Listed by: <strong>{{ listing.user.username }}</strong></li>
+            <li> Category:
+                {% if listing.category %}
+                    {{ listing.category }}
+                {% else %}
+                    No Category Listed
+                {% endif %}
+            </li>
+        </ul>
+        <h3>Comments</h3>
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    <strong>{{ comment.user.username }}</strong>:
+                    {{ comment.comment }}
+                </li>
+                {% empty %}
+                <li>No comments yet</li>
+            {% endfor %}
+        </ul>
+        <form action="{% url 'comments' listing.id %}" method="post">
+            {% csrf_token %}
+            <textarea class="form-control" name="comment" placeholder="Comment" required></textarea> <br>
+            <input type="submit" class="btn btn-primary" value="Add Comment">
+    </div>
+{% endblock %}

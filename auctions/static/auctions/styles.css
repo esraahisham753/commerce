@@ -1,0 +1,42 @@
+body {
+    padding: 10px;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.card-img {
+    width: 50%;
+}
+
+.card-img img {
+    width: 100%;
+    height: auto;
+}
+
+.card-content {
+    padding: 4rem;
+    color: black;
+    text-decoration: none;
+}
+
+.price {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+form {
+    width: 80%;
+    margin: 2rem auto;
+}
+
+form input[type="number"] {
+    width: 300px;
+}
+
+.form-control {
+    margin-bottom: 1rem;
+}
